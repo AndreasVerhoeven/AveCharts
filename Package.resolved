@@ -1,0 +1,52 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AutoLayoutConvenience",
+        "repositoryURL": "https://github.com/AndreasVerhoeven/AutoLayoutConvenience",
+        "state": {
+          "branch": "main",
+          "revision": "7711b86bb81c8b0257df11aaf01940dd5102199f",
+          "version": null
+        }
+      },
+      {
+        "package": "AveCommonHelperViews",
+        "repositoryURL": "https://github.com/AndreasVerhoeven/AveCommonHelperViews",
+        "state": {
+          "branch": "main",
+          "revision": "664a5441917eb3b3aa6e1c394991586cdf1c889c",
+          "version": null
+        }
+      },
+      {
+        "package": "AveDataSource",
+        "repositoryURL": "https://github.com/AndreasVerhoeven/AveDataSource",
+        "state": {
+          "branch": "master",
+          "revision": "db3f6eb74dcccd17724de7e867e0beb4cf143a91",
+          "version": null
+        }
+      },
+      {
+        "package": "GeometryHelpers",
+        "repositoryURL": "https://github.com/AndreasVerhoeven/GeometryHelpers",
+        "state": {
+          "branch": "main",
+          "revision": "73e3470c50b0095088973ea26c03c6538c08f89b",
+          "version": null
+        }
+      },
+      {
+        "package": "UIKitAnimations",
+        "repositoryURL": "https://github.com/AndreasVerhoeven/UIKitAnimations",
+        "state": {
+          "branch": "main",
+          "revision": "a03d0d878452a50e0a13f3228ee768f68db1cd97",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
