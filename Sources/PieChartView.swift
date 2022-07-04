@@ -196,7 +196,7 @@ extension PieChartView {
 			get { fillColor }
 			set {
 				fillColor = newValue
-				strokeColor = newValue.flatMap { UIColor.systemBackground.blended(with: $0) }
+				strokeColor = newValue.flatMap { UIColor.systemBackground.withAlphaComponent(0.5).blended(with: $0) }
 			}
 		}
 		
