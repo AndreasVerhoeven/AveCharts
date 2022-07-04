@@ -206,7 +206,7 @@ extension PieChartView {
 				return UIBezierPath(arcCenter: bounds.center, radius: radius, startAngle: mid, endAngle: mid, clockwise: true).currentPoint
 			}
 			
-			return CGAffineTransform(from: point(for: radius), to: point(for: radius + .defaultDoublePadding))
+			return CGAffineTransform(from: point(for: radius), to: point(for: radius + 16))
 		}
 		
 		func setStartAngle(_ start: CGFloat, end: CGFloat) {
