@@ -18,13 +18,16 @@ public protocol PieChartItem: Identifiable, Hashable {
 	var value: Decimal { get }
 }
 
+public struct PieChartViewItem<ID: Hashable>: PieChartItem {
+	public var id: ID
+	public var color: UIColor
+	public var value: Decimal
+}
+
+public typealias SimplePieChartView<T: Hashable> = PieChartView<PieChartViewItem<T>>
+public typealias StringPieChartView = SimplePieChartView<String>
 
 open class PieChartView<Item: PieChartItem>: UIView {
-	public struct Item<ID: Hashable>: PieChartItem {
-		public var id: ID
-		public var color: UIColor
-		public var value: Decimal
-	}
 	
 	private(set) open var items = [Item]()
 	private var sliceViews = [SliceView]()
