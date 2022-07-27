@@ -22,6 +22,24 @@ public struct PieChartViewItem<ID: Hashable>: PieChartItem {
 	public var id: ID
 	public var color: UIColor
 	public var value: Decimal
+	
+	public init(id: ID, color: UIColor, value: Decimal) {
+		self.id = id
+		self.color = color
+		self.value = value
+	}
+	
+	public init(id: ID, color: UIColor, part: Double, of total: Double) {
+		self.id = id
+		self.color = color
+		self.value = total != 0 ? Decimal(part / total) : 0
+	}
+	
+	public init<T: BinaryInteger>(id: ID, color: UIColor, part: T, of total: T) {
+		self.id = id
+		self.color = color
+		self.value = total != 0 ? Decimal(Double(part) / Double(total)) : 0
+	}
 }
 
 public typealias SimplePieChartView<T: Hashable> = PieChartView<PieChartViewItem<T>>
