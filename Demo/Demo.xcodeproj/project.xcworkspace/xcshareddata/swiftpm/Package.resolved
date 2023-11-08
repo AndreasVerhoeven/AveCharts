@@ -1,0 +1,167 @@
+{
+  "pins" : [
+    {
+      "identity" : "autolayoutconvenience",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AutoLayoutConvenience.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6b5690f62e1476e5a7e7f66112548b8999934c3e"
+      }
+    },
+    {
+      "identity" : "avecharts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AveCharts.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e4090cb52b3b50c5a83bcb246955d94feb148adb"
+      }
+    },
+    {
+      "identity" : "avecommon",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:AndreasVerhoeven/AveCommon.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e85bfbb11fb35474aff79940f7d10ec5aad05d71"
+      }
+    },
+    {
+      "identity" : "avecommonhelperviews",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AveCommonHelperViews.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "664a5441917eb3b3aa6e1c394991586cdf1c889c"
+      }
+    },
+    {
+      "identity" : "avedatasource",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AveDataSource.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "836f93f20ab2fa65ffe1678be64700c9a8f8230d"
+      }
+    },
+    {
+      "identity" : "avefonthelpers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AveFontHelpers.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "c5507fe674845f9db855e870ab091dc0b935e398"
+      }
+    },
+    {
+      "identity" : "aveswifthelpers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AveSwiftHelpers.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "59e3a6e38efad94ece8e9777b9f73aacd4cbefdd"
+      }
+    },
+    {
+      "identity" : "avetablebuilder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/AveTableBuilder.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ebf3d59f6dd1e5964e9f826426e2860c6c1b7bac"
+      }
+    },
+    {
+      "identity" : "balloonview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/BalloonView.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "0f2dec6dcad02c80f10dd16e0945cf6b53bf7506"
+      }
+    },
+    {
+      "identity" : "custompageablecollectionview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/CustomPageableCollectionView.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "678d339886e73bc6e7fe99b680385c5d2eb7d1d0"
+      }
+    },
+    {
+      "identity" : "geometryhelpers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/GeometryHelpers.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "73e3470c50b0095088973ea26c03c6538c08f89b"
+      }
+    },
+    {
+      "identity" : "markdownkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bmoliveira/MarkdownKit.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4270b02490752f5c224de790764465faf552ec63"
+      }
+    },
+    {
+      "identity" : "navigationbarbackgroundhider",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/NavigationBarBackgroundHider.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "5ec5b7e66a69614644ffe08932db22038a1f2c8d"
+      }
+    },
+    {
+      "identity" : "scrollviewobserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/ScrollViewObserver.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7af69845610a7f11bbb2069e9a943adfe3d3f8e7"
+      }
+    },
+    {
+      "identity" : "selfsizingscroller",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/SelfSizingScroller.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "da804712506b780e3469b6f895d665644f38cf23"
+      }
+    },
+    {
+      "identity" : "sfsafesymbols",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SFSafeSymbols/SFSafeSymbols.git",
+      "state" : {
+        "branch" : "stable",
+        "revision" : "4fe3f8d13e09ef0a324c67a12d9cfcccf2d6989c"
+      }
+    },
+    {
+      "identity" : "uikitanimations",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/UIKitAnimations.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "a03d0d878452a50e0a13f3228ee768f68db1cd97"
+      }
+    },
+    {
+      "identity" : "uiviewmodifiers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreasVerhoeven/UIViewModifiers.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b4fb9ddea8df8c8bf6c8a253d4aa9211b8c72d2e"
+      }
+    }
+  ],
+  "version" : 2
+}

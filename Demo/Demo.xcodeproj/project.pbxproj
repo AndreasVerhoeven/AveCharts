@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4984B51E2AB1D7D600D5796E /* AveCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 4984B51D2AB1D7D600D5796E /* AveCommon */; };
+		4984B5202AB1D82600D5796E /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4984B51F2AB1D82600D5796E /* BarChartView.swift */; };
 		49A6F79626508AAB002EB98D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F79526508AAB002EB98D /* AppDelegate.swift */; };
 		49A6F79826508AAB002EB98D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F79726508AAB002EB98D /* SceneDelegate.swift */; };
 		49A6F79A26508AAB002EB98D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F79926508AAB002EB98D /* ViewController.swift */; };
@@ -16,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4984B51F2AB1D82600D5796E /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
 		49A6F79226508AAB002EB98D /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A6F79526508AAB002EB98D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49A6F79726508AAB002EB98D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -31,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4984B51E2AB1D7D600D5796E /* AveCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				49A78893287389AD00CE9CF2 /* PieChartView.swift */,
+				4984B51F2AB1D82600D5796E /* BarChartView.swift */,
 			);
 			name = Sources;
 			path = ../Sources;
@@ -92,6 +97,9 @@
 			dependencies = (
 			);
 			name = Demo;
+			packageProductDependencies = (
+				4984B51D2AB1D7D600D5796E /* AveCommon */,
+			);
 			productName = Demo;
 			productReference = 49A6F79226508AAB002EB98D /* Demo.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +127,9 @@
 				Base,
 			);
 			mainGroup = 49A6F78926508AAB002EB98D;
+			packageReferences = (
+				4984B51C2AB1D7D600D5796E /* XCRemoteSwiftPackageReference "AveCommon" */,
+			);
 			productRefGroup = 49A6F79326508AAB002EB98D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -147,6 +158,7 @@
 			files = (
 				49A78894287389AD00CE9CF2 /* PieChartView.swift in Sources */,
 				49A6F79A26508AAB002EB98D /* ViewController.swift in Sources */,
+				4984B5202AB1D82600D5796E /* BarChartView.swift in Sources */,
 				49A6F79626508AAB002EB98D /* AppDelegate.swift in Sources */,
 				49A6F79826508AAB002EB98D /* SceneDelegate.swift in Sources */,
 			);
@@ -342,6 +354,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4984B51C2AB1D7D600D5796E /* XCRemoteSwiftPackageReference "AveCommon" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:AndreasVerhoeven/AveCommon.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4984B51D2AB1D7D600D5796E /* AveCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4984B51C2AB1D7D600D5796E /* XCRemoteSwiftPackageReference "AveCommon" */;
+			productName = AveCommon;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 49A6F78A26508AAB002EB98D /* Project object */;
 }
