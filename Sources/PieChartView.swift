@@ -103,7 +103,7 @@ open class PieChartView<Item: PieChartItem>: UIView {
 		var deletionIndices = Set<Int>()
 		
 		let diff = newItems.difference(from: items) { $0.id == $1.id }
-		for diffItem in diff.insertions {
+		for diffItem in diff {
 			switch diffItem {
 				case .insert(let offset, let item, _):
 					let newView = SliceView(initial: offset > 0 ? newViews[offset - 1].endAngle : 0, color: item.color)
