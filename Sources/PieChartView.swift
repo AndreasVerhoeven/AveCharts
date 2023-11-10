@@ -77,7 +77,7 @@ open class PieChartView<Item: PieChartItem>: UIView {
 		
 		public init(rawValue: Int) { self.rawValue = rawValue }
 		
-		public static var moveOutSelected: Self {  Self(rawValue: 1 << 0) }
+		public static var moveOutSelected: Self { Self(rawValue: 1 << 0) }
 		public static var shadowSelected: Self { Self(rawValue: 1 << 1) }
 		public static var fadeOutUnselected: Self { Self(rawValue: 1 << 2) }
 			
@@ -113,7 +113,7 @@ open class PieChartView<Item: PieChartItem>: UIView {
 	}
 	
 	open func setItems(_ newItems: [Item], animated: Bool) {
-		guard items.count != newItems.count || zip(items, newItems).contains(where: { $0.0.isEqual(to: $0.1)  }) else { return }
+		guard items.count != newItems.count || zip(items, newItems).contains(where: { $0.0.isEqual(to: $0.1) == false }) else { return }
 		
 		let oldAndNewViews = newItems.createArrayWithOldAndNewItems(from: items, by: { $0.id == $1.id }, fromTarget: sliceViews, transformer: { item in
 			let newView = SliceView(initial: 0, color: item.color)
@@ -234,7 +234,6 @@ open class PieChartView<Item: PieChartItem>: UIView {
 	}
 }
 
-
 extension PieChartView {
 	class SliceView: ShapeView {
 		var radius: CGFloat { min(bounds.width * 0.5, bounds.height * 0.5) }
@@ -320,7 +319,7 @@ extension PieChartView.SliceView {
 			super.display()
 			
 			let startAngle = (self.presentation() ?? self).startAngle
-			let endAngle =  max(startAngle, (self.presentation() ?? self).endAngle)
+			let endAngle = max(startAngle, (self.presentation() ?? self).endAngle)
 			
 			let path = UIBezierPath()
 			let circle = Circle(in: bounds)
@@ -345,7 +344,6 @@ extension PieChartView.SliceView {
 			self.endAngle = layer.endAngle
 			self.needsDisplayOnBoundsChange = layer.needsDisplayOnBoundsChange
 		}
-		
 		
 		required init?(coder: NSCoder) {
 			super.init(coder: coder)
