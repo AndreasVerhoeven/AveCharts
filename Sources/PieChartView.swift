@@ -12,10 +12,16 @@ import AveDataSource
 import GeometryHelpers
 import UIKitAnimations
 
-public protocol PieChartItem: Identifiable, Hashable {
+public protocol PieChartItem: Identifiable {
 	var id: ID { get }
 	var color: UIColor { get }
 	var value: Decimal { get }
+}
+
+fileprivate extension PieChartItem {
+	func isEqual(to other: Self) -> Bool {
+		return id == other.id && color == other.color && value == other.value
+	}
 }
 
 public struct PieChartViewItem<ID: Hashable>: PieChartItem {
@@ -46,15 +52,25 @@ public typealias SimplePieChartView<T: Hashable> = PieChartView<PieChartViewItem
 public typealias StringPieChartView = SimplePieChartView<String>
 
 open class PieChartView<Item: PieChartItem>: UIView {
+	public typealias Item = Item
 	
 	private(set) open var items = [Item]()
 	private var sliceViews = [SliceView]()
+	//private var activeSliceViews = [SliceView]()
+	//private var beingDeletedSliceViews = [SliceView]()
+	
 	private var isPendingDeletionSliceViews = Set<SliceView>()
 	
 	private(set) open var selectedItemIds = Set<Item.ID>()
 	open var singleSelectedItemId: Item.ID? { selectedItemIds.first }
 	
 	open var selectionCallback: ((Item.ID?) -> Void)?
+	
+	var lineColor: UIColor? = UIColor.systemBackground {
+		didSet {
+			sliceViews.forEach { $0.strokeColor = items.count > 1 ? lineColor : .clear }
+		}
+	}
 	
 	public struct SelectionStyle: OptionSet, RawRepresentable {
 		public var rawValue: Int
@@ -97,52 +113,75 @@ open class PieChartView<Item: PieChartItem>: UIView {
 	}
 	
 	open func setItems(_ newItems: [Item], animated: Bool) {
-		guard items != newItems else { return }
+		guard items.count != newItems.count || zip(items, newItems).contains(where: { $0.0.isEqual(to: $0.1)  }) else { return }
 		
-		var newViews = sliceViews
-		var deletionIndices = Set<Int>()
-		
-		let diff = newItems.difference(from: items) { $0.id == $1.id }
-		for diffItem in diff {
-			switch diffItem {
-				case .insert(let offset, let item, _):
-					let newView = SliceView(initial: offset > 0 ? newViews[offset - 1].endAngle : 0, color: item.color)
-					newView.setShadow(color: UIColor.black.cgColor, opacity: 0, radius: 2, offset: CGSize(width: 0, height: 1))
-					newView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped(_:))))
-					addSubview(newView, filling: .superview)
-					newViews.insert(newView, at: offset)
-					
-				case .remove(let offset, _, _):
-					deletionIndices.insert(offset)
-			}
-			
-		}
+		let oldAndNewViews = newItems.createArrayWithOldAndNewItems(from: items, by: { $0.id == $1.id }, fromTarget: sliceViews, transformer: { item in
+			let newView = SliceView(initial: 0, color: item.color)
+			newView.itemId = item.id
+			newView.setShadow(color: UIColor.black.cgColor, opacity: 0, radius: 2, offset: CGSize(width: 0, height: 1))
+			newView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped(_:))))
+			newView.strokeColor = (self.items.count > 1 ? self.lineColor : .clear)
+			addSubview(newView, filling: .superview)
+			return newView
+		})
 		
 		items = newItems
-		sliceViews = newViews
-		let isPendingDeletionSliceViews: Set<SliceView> = Set<SliceView>( deletionIndices.map({ newViews[$0] }))
-
-		//UIView.performAnimationsIfNeeded(animated: animated, animations: {
-		UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.beginFromCurrentState, .allowUserInteraction], animations: {
+		sliceViews = oldAndNewViews.newItems
+		
+		var indexedItems = [Item.ID: Item]()
+		items.forEach { indexedItems[$0.id] = $0 }
+		
+		var current = CGFloat(0)
+		var beingDeletedSliceViews = [SliceView]()
+		for (index, view) in oldAndNewViews.oldAndNewItems.enumerated() {
+			if oldAndNewViews.insertionIndexSet.contains(index) == true {
+				view.setStartAngle(current, end: current)
+				view.layer.setNeedsDisplay()
+				view.layer.displayIfNeeded()
+			} else {
+				if oldAndNewViews.removalIndexSet.contains(index) == true {
+					beingDeletedSliceViews.append(view)
+				}
+				current += view.endAngle
+			}
+		}
+		
+		CATransaction.flush()
+		
+		let updates = {
 			var start = CGFloat(0)
 			let total = self.items.lazy.map(\.value).reduce(Decimal.zero, +).cgFloatValue
-			for (view, item) in zip(self.sliceViews, self.items) {
-				if isPendingDeletionSliceViews.contains(view) == true {
+			for (index, view) in oldAndNewViews.oldAndNewItems.enumerated() {
+				view.strokeColor = (self.items.count > 1 ? self.lineColor : .clear)
+				
+				if oldAndNewViews.removalIndexSet.contains(index) == true {
 					view.setStartAngle(start, end: start)
 				} else {
+					let item = indexedItems[view.itemId!]!
 					let percentage = total != 0 ? item.value.cgFloatValue / total : 0
 					let end = start + 2 * .pi * percentage
 					view.setStartAngle(start, end: end)
 					view.color = item.color
 					start = end
+					
+					self.bringSubviewToFront(view)
+					self.updateSelection(sliceView: view, animated: animated)
 				}
-				self.updateSelection(for: item, sliceView: view, animated: animated)
 			}
-			
-		}, completion: { _ in
-			isPendingDeletionSliceViews.forEach { $0.removeFromSuperview() }
-			self.sliceViews.removeAll { isPendingDeletionSliceViews.contains($0) }
-		})
+		}
+		
+		let completion = {
+			beingDeletedSliceViews.forEach { $0.removeFromSuperview() }
+		}
+		
+		if animated == true {
+			UIView.animate(withDuration: 1, delay: 1/60, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.beginFromCurrentState, .allowUserInteraction], animations: updates, completion: { _ in
+				completion()
+			})
+		} else {
+			updates()
+			completion()
+		}
 	}
 	
 	// MARK: - Input
@@ -156,13 +195,13 @@ open class PieChartView<Item: PieChartItem>: UIView {
 	
 	// MARK: - Privates
 	private func updateSelection(animated: Bool) {
-		for (item, sliceView) in zip(self.items, self.sliceViews) {
-			updateSelection(for: item, sliceView: sliceView, animated: animated)
+		for sliceView in sliceViews {
+			updateSelection(sliceView: sliceView, animated: animated)
 		}
 	}
 	
-	private func updateSelection(for item: Item, sliceView: SliceView, animated: Bool) {
-		let isSelected = selectedItemIds.contains(item.id) == true && isPendingDeletionSliceViews.contains(sliceView) == false
+	private func updateSelection(sliceView: SliceView, animated: Bool) {
+		let isSelected = selectedItemIds.contains(sliceView.itemId!) == true
 		
 		UIView.performAnimationsIfNeeded(animated: animated, duration: 0.3) {
 			sliceView.alpha = (self.selectedItemIds.isEmpty == false && self.selectionStyle.contains(.fadeOutUnselected) == true && isSelected == false) ? 0.2 : 1
@@ -171,7 +210,11 @@ open class PieChartView<Item: PieChartItem>: UIView {
 		}
 		
 		let updates = {
-			sliceView.transform = (self.selectionStyle.contains(.moveOutSelected) == true && isSelected == true) ? sliceView.transformForSelection : .identity
+			if self.items.count > 1 {
+				sliceView.transform = (self.selectionStyle.contains(.moveOutSelected) == true && isSelected == true) ? sliceView.transformForSelection : .identity
+			} else {
+				sliceView.transform = .identity
+			}
 		}
 		
 		if animated == true {
@@ -197,6 +240,9 @@ extension PieChartView {
 		var radius: CGFloat { min(bounds.width * 0.5, bounds.height * 0.5) }
 		var circleCenter: CGPoint { bounds.center }
 		
+		var itemId: Item.ID?
+		var isBeingDeleted = false
+		
 		var startAngle: CGFloat {
 			get { sliceLayer.startAngle }
 			set { sliceLayer.startAngle = newValue }
@@ -215,10 +261,7 @@ extension PieChartView {
 		
 		var color: UIColor? {
 			get { fillColor }
-			set {
-				fillColor = newValue
-				strokeColor = .systemBackground
-			}
+			set { fillColor = newValue }
 		}
 		
 		var transformForSelection: CGAffineTransform {
@@ -246,7 +289,7 @@ extension PieChartView {
 		
 		// MARK: - CALayerDelegate
 		override open func action(for layer: CALayer, forKey key: String) -> CAAction? {
-			if key == "startAngle" || key == "endAngle" {
+			if key == "startAngle" || key == "endAngle" || key == "lineWidth" {
 				if let animation = layer.action(forKey: "opacity") as? CABasicAnimation {
 					animation.keyPath = key
 					animation.fromValue = (layer.presentation() ?? layer).value(forKey: key)
@@ -277,7 +320,7 @@ extension PieChartView.SliceView {
 			super.display()
 			
 			let startAngle = (self.presentation() ?? self).startAngle
-			let endAngle = max(startAngle, (self.presentation() ?? self).endAngle)
+			let endAngle =  max(startAngle, (self.presentation() ?? self).endAngle)
 			
 			let path = UIBezierPath()
 			let circle = Circle(in: bounds)
@@ -318,4 +361,64 @@ extension CGFloat {
 
 extension Decimal {
 	var cgFloatValue: CGFloat { CGFloat(self) }
+}
+
+extension Array {
+	struct OldAndNewItemsResult<T> {
+		var oldAndNewItems: [T]
+		var newItems: [T]
+		var insertionIndexSet: IndexSet
+		var removalIndexSet: IndexSet
+	}
+	
+	func createArrayWithOldAndNewItems<TargetType>(from old: [Element], by comparator: (Element, Element) -> Bool, fromTarget oldTarget: [TargetType], transformer: (Element) -> TargetType) -> OldAndNewItemsResult<TargetType> {
+		let diff = difference(from: old, by: comparator)
+		var newTarget = oldTarget
+		
+		var insertionOffsets = IndexSet()
+		var removals = [Index: TargetType]()
+		for change in diff {
+			switch change {
+				case .insert(let offset, let item, _):
+					newTarget.insert(transformer(item), at: offset)
+					insertionOffsets.insert(offset)
+					
+				case .remove(let offset, _, _):
+					removals[offset] = newTarget[offset]
+					newTarget.remove(at: offset)
+			}
+		}
+		
+		func adjustOffsetBySkippingInsertions(for offset: Int) -> Int {
+			var start = 0
+			var current = offset
+			while true {
+				let numberOfItemsToSkip = insertionOffsets.count(in: start..<current + 1)
+				guard numberOfItemsToSkip > 0 else { break }
+				start = current + 1
+				current += numberOfItemsToSkip
+			}
+			return current
+		}
+		
+		var oldAndNewTarget = newTarget
+		
+		var removalIndexSet = IndexSet()
+		var removalCounter = diff.removals.count
+		for case let .remove(offset, _, _) in diff.removals.reversed() {
+			let numberOfItemsRemovedBeforeUs = removalCounter - 1
+			let offsetToInsertAfter = offset - numberOfItemsRemovedBeforeUs - 1
+			
+			let adjustedOffset = adjustOffsetBySkippingInsertions(for: offsetToInsertAfter)
+			let insertionOffset = Swift.min(adjustedOffset + 1, oldAndNewTarget.count)
+			oldAndNewTarget.insert(removals[offset]!, at: insertionOffset)
+			removalCounter -= 1
+			
+			removalIndexSet.shift(startingAt: insertionOffset, by: 1)
+			removalIndexSet.insert(insertionOffset)
+			insertionOffsets.shift(startingAt: insertionOffset, by: 1)
+		}
+		
+		return OldAndNewItemsResult(oldAndNewItems: oldAndNewTarget, newItems: newTarget, insertionIndexSet: insertionOffsets, removalIndexSet: removalIndexSet)
+	}
 }
