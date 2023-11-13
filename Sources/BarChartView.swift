@@ -174,6 +174,16 @@ open class BarGraphView<Section: BarGraphSection>: UIView, UICollectionViewDeleg
 		cell.setShowFadedOut(self.shouldShowFadedOut(indexPath: indexPath), animated: animated)
 	})
 	
+	private func ensureItemIsVisible(at indexPath: IndexPath, animated: Bool) {
+		guard let itemFrame = collectionView.layoutAttributesForItem(at: indexPath)?.frame else { return }
+		
+		if itemFrame.minX < collectionView.visibleScrolledFrame.minX {
+			collectionView.scrollToItem(at: indexPath, at: .left, animated: animated)
+		} else if itemFrame.maxX > collectionView.visibleScrolledFrame.maxX {
+			collectionView.scrollToItem(at: indexPath, at: .right, animated: animated)
+		}
+	}
+	
 	private var endContentOffsetX: CGFloat {
 		return collectionView.contentSize.width - collectionView.bounds.width + collectionView.contentInset.right
 	}
@@ -380,5 +390,19 @@ extension BarGraphView {
 		required init?(coder: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
 		}
+	}
+}
+
+extension UIScrollView {
+	fileprivate var visibleFrame: CGRect {
+		let rect = CGRect(origin: .zero, size: bounds.size)
+		return rect.inset(by: adjustedContentInset)
+	}
+	
+	fileprivate var visibleScrolledFrame: CGRect {
+		var visibleScrolledFrame = visibleFrame
+		visibleScrolledFrame.origin.y += contentOffset.y
+		visibleScrolledFrame.origin.x += contentOffset.x
+		return visibleScrolledFrame
 	}
 }
